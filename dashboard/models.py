@@ -15,24 +15,25 @@ class SignUp(models.Model):
     Principal =models.CharField(max_length=100)
     email= models.EmailField(max_length=70, unique= True)
     contact=models.CharField(max_length=10)
+    Location = models.TextField(null=True)
 
     def __str__(self):
         return self.Principal
 
 #details of student
 class Details(models.Model):
-    st_code = models.IntegerField(max_length=100,default=0,primary_key=True)
+    st_code = models.IntegerField(default=0,primary_key=True)
     name = models.CharField(max_length=100)
     college = models.CharField(max_length=1000)
-    Location = models.TextField()
+
     email = models.EmailField(max_length=70, unique= True)
 
     def __str__(self):
         return "{}".format(self.college)
 # academic data and score
 class Academics(models.Model):
-    english= models.IntegerField(max_length=10,default=0)
-    maths= models.IntegerField(max_length=10,default=0)
+    english= models.IntegerField(default=0)
+    maths= models.IntegerField(default=0)
     science= models.IntegerField(default=0)
     evs= models.IntegerField(default=0)
     sst= models.IntegerField(default=0)
