@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
         #return self.university_code
 
 class School(models.Model):
-    schoolcode = models.CharField(max_length=100,primary_key=True)
+    schoolcode = models.CharField(max_length=100)
     schoolname = models.CharField(max_length=100)
     #university_code= models.ForeignKey(University,on_delete=models.CASCADE)
 
