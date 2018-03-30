@@ -4,10 +4,17 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
+class University(models.Model):
+   university_code = models.CharField(max_length=100,primary_key=True)
+   university_name = models.CharField(max_lenth=1000)
+
+   def __str__(self):
+        return self.university_code
 
 class School(models.Model):
-    schoolcode = models.CharField(max_length=100)
+    schoolcode = models.CharField(max_length=100,primary_key=True)
     schoolname = models.CharField(max_length=100)
+    university_code= models.ForeignKey(University,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.schoolcode
