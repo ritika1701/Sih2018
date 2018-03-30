@@ -17,7 +17,7 @@ class SignUp(models.Model):
     Location = models.TextField(null=True)
 
     def __str__(self):
-        return self.Principal
+        return self.email
 
 #details of student
 class Details(models.Model):
@@ -32,7 +32,7 @@ class Details(models.Model):
    
 
     def __str__(self):
-        return "{}".format(self.college)
+        return "{}".format(self.rollno)
 # academic data and score
 class Academics(models.Model):
     eng= models.IntegerField(default=0)
