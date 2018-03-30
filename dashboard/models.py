@@ -38,7 +38,6 @@ class Details(models.Model):
 
     teacher_remark = models.TextField(null=True)
     preferred = models.CharField(max_length=100)
-    marksheet = models.ImageField(upload_to='pic_folder/', default='pic_folder/None/no-img.jpg')
 
     def __str__(self):
         return self.rollno
@@ -84,4 +83,4 @@ class extra_curricular(models.Model):
     activity_score = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.activities
+        return self.activity_name
