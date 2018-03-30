@@ -11,13 +11,13 @@ class School(models.Model):
 #Registration of school
 class SignUp(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
-    school_code=models.OneToOneField(School,on_delete=models.CASCADE)
+    schoolcode=models.OneToOneField(School,on_delete=models.CASCADE)
     email= models.EmailField(max_length=70, unique= True)
     contact=models.CharField(max_length=10)
     location = models.TextField(null=True)
 
     def __str__(self):
-        return self.Principal
+        return self.email
 
 #details of student
 class Details(models.Model):
@@ -34,7 +34,7 @@ class Details(models.Model):
    
 
     def __str__(self):
-        return "{}".format(self.college)
+        return self.rollno
 # academic data and score
 class Academics(models.Model):
     eng= models.IntegerField(default=0)
@@ -42,7 +42,7 @@ class Academics(models.Model):
     science= models.IntegerField(default=0)
     evs= models.IntegerField(default=0)
     sst= models.IntegerField(default=0)
-    Academic_score = models.IntegerField(default=0)
+    academic_score = models.IntegerField(default=0)
     student = models.ForeignKey(Details,on_delete=models.CASCADE)
 
 # sports data and score
@@ -61,10 +61,10 @@ class sports(models.Model):
 # activity data and score
 class extra_curricular(models.Model):
     ativities =models.CharField(max_length=100)
-    Inter_played =models.IntegerField(default=0)
-    Inter_won = models.IntegerField(default=0)
-    Intra_played= models.IntegerField(default=0)
-    Intra_won = models.IntegerField(default=0)
+    inter_played =models.IntegerField(default=0)
+    inter_won = models.IntegerField(default=0)
+    intra_played= models.IntegerField(default=0)
+    intra_won = models.IntegerField(default=0)
     student = models.ForeignKey(Details,on_delete=models.CASCADE)
     activity_score = models.IntegerField(default=0)
 
