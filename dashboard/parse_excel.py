@@ -2,7 +2,7 @@ import xlrd
 from .models import Details, Academics, sports, extra_curricular
 
 
-def parse_excel(filename):
+def parse_excel(filename, schoolcode):
     wb = xlrd.open_workbook(filename)
     sheet = wb.sheet_by_index(0)
 
@@ -16,3 +16,6 @@ def parse_excel(filename):
             cell_value = sheet.cell(row, col).value
 
             student_data[cell_value_key] = cell_value
+
+
+    Details.create()
