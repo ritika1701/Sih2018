@@ -1,5 +1,5 @@
 import xlrd
-from .models import Details, Academics, sports, extra_curricular
+from .models import Details, School, Academics, sports, extra_curricular
 
 
 def parse_excel(filename, schoolcode):
@@ -10,12 +10,20 @@ def parse_excel(filename, schoolcode):
     for row in range(1, sheet.nrows):
         for col in range(0, sheet.ncols):
             cell_value_key = sheet.cell(0, col).value
-            if type(cell_value_key) == str:
-                cell_value_key = '_'.join(str.lower(cell_value_key).split(' '))
-
             cell_value = sheet.cell(row, col).value
+            if cell_value_key == "Sports":
 
-            student_data[cell_value_key] = cell_value
+                sports_list = cell_value.split(',')
+                sport_details = dict()
+                for sport in sports_list:
+                    sport = sport.split(' ')
+                    sport_details[sport[0]] = sport[1:]
 
+                student_data['sports'] = sport_details
+            else:
+                cell_value_key = '_'.join(str.lower(cell_value_key).split(' '))
+                student_data[cell_value_key] = cell_value
+
+    school = School.objects.get(schoolcode=schoolcode)
 
     Details.create()

@@ -69,12 +69,12 @@ class sports(models.Model):
     student = models.ForeignKey(Details, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.sports_played
+        return self.sport_name
 
 
 # activity data and score
 class extra_curricular(models.Model):
-    activities = models.CharField(max_length=100)
+    activity_name = models.CharField(max_length=100)
     inter_played = models.IntegerField(default=0)
     inter_won = models.IntegerField(default=0)
     intra_played = models.IntegerField(default=0)
