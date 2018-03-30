@@ -45,6 +45,9 @@ class Academics(models.Model):
     academic_score = models.IntegerField(default=0)
     student = models.ForeignKey(Details,on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.academic_score
+
 # sports data and score
 class sports(models.Model):
     sports_played = models.CharField(max_length=100)
