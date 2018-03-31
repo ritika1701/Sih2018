@@ -45,7 +45,6 @@ class Details(models.Model):
 
     teacher_remark = models.TextField(null=True)
     preferred = models.CharField(max_length=100)
-    marksheet = models.ImageField(upload_to='pic_folder/', default='pic_folder/None/no-img.jpg')
 
     def __str__(self):
         return self.rollno
@@ -53,16 +52,19 @@ class Details(models.Model):
 
 # academic data and score
 class Academics(models.Model):
-    eng = models.IntegerField(default=0)
-    maths = models.IntegerField(default=0)
-    science = models.IntegerField(default=0)
-    evs = models.IntegerField(default=0)
-    sst = models.IntegerField(default=0)
-    academic_score = models.IntegerField(default=0)
+    eng = models.FloatField(default=0)
+    maths = models.FloatField(default=0)
+    science = models.FloatField(default=0)
+    evs = models.FloaField(default=0)
+    sst = models.FloatField(default=0)
+    academic_score = models.FloatField(default=0)
     student = models.ForeignKey(Details, on_delete=models.CASCADE)
-
     def __str__(self):
-        return self.academic_score
+        return str(self.academic_score)
+
+    def save(self,*args,**kwargs):
+        self.academic_score=(self.eng+self.maths+self.science+self.evs+self.sst)/5
+        super(Academics,self).save(*args,**kwargs)
 
 
 # sports data and score
@@ -72,7 +74,7 @@ class sports(models.Model):
     semi = models.IntegerField(default=0)
     final = models.IntegerField(default=0)
     won = models.IntegerField(default=0)
-    sport_score = models.IntegerField(default=0)
+    sport_score = models.FloatField(default=0)
     student = models.ForeignKey(Details, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -88,7 +90,7 @@ class extra_curricular(models.Model):
     intra_won = models.IntegerField(default=0)
     student = models.ForeignKey(Details, on_delete=models.CASCADE)
 
-    activity_score = models.IntegerField(default=0)
+    activity_score = models.FloatField(default=0)
 
     def __str__(self):
         return self.activities
