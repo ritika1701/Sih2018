@@ -36,7 +36,6 @@ def get_sports_performance(grade=2, sport_name='badminton', cutoff=7):
         s.sport_score = round(sport_score, 2)
         s.save()
 
-
     students_data = sports.objects.filter(student__grade=grade).filter(sport_name__iexact=sport_name).filter(
         student__preferred__icontains='sports')
     min_sport_score = students_data.aggregate(Min('sport_score', output_field=FloatField()))['sport_score__min']
@@ -61,10 +60,11 @@ def get_extracurricular_performance(grade=2, activity_name='music', cutoff=7):
     score_list = []
 
     for student in students_data:
-        e = extra_curricular.objects.get(student__grade=grade, activity_name__iexact=activity_name, student=student.student)
+        e = extra_curricular.objects.get(student__grade=grade, activity_name__iexact=activity_name,
+                                         student=student.student)
         activity_score = (student.intra_won / student.intra_played) * 4 + (
                 student.inter_won / student.inter_played) * 6
-        e.activity_score = round(activity_score,2)
+        e.activity_score = round(activity_score, 2)
         e.save()
 
     min_activity_score = students_data.aggregate(Min('activity_score', output_field=FloatField()))[
@@ -88,21 +88,50 @@ def get_extracurricular_performance(grade=2, activity_name='music', cutoff=7):
     student_list = [x[0] for x in score_list if x[1] >= cutoff]
     return student_list
 
+
 # Smart Suggestions
-# def give_suggestion(grade=2,domain='academics',sub_domain='eng'):
-#     if domain is 'academics':
-#
-#         student_data = Academics.objects.filter(student__grade=grade).aggregate(Avg(sub_domain))
-#
-#     elif domain is 'sports':
-#         students = sports.objects.filter(sport_name__iexact=sub_domain).filter(student__grade=grade)
-#         for student in students:
-#
-#             sport_score = (student.semi / student.matches) * 2 + (student.final / student.semi) * 3 + (
-#                     student.won / student.final) * 5
-#             s = sports.objects.get(sport_name=sub_domain, student=student.student, student__grade=grade)
-#             s.sport_score = round(sport_score, 2)
-#             s.save()
+def give_suggestion(grade=2, domain='academics', sub_domain='eng'):
+    schoolcodes = School.objects.values('schoolcode').distinct()
+    mean_values = dict()
+    if domain is 'academics':
 
+        student_data = Academics.objects.filter(student__grade=grade)
+        collective_mean = student_data.aggregate(Avg(sub_domain))[sub_domain + '__avg']
 
+        for schoolcode in schoolcodes:
+            mean_values[schoolcode['schoolcode']] = student_data.filter(
+                student__schoolcode=schoolcode['schoolcode']).aggregate(Avg((sub_domain)))[sub_domain + '__avg']
 
+    elif domain is 'sports':
+        student_data = sports.objects.filter(sport_name__iexact=sub_domain).filter(student__grade=grade)
+        collective_mean = student_data.aggregate(Avg((sub_domain)))[sub_domain + '__avg']
+
+        for student in student_data:
+            sport_score = (student.semi / student.matches) * 2 + (student.final / student.semi) * 3 + (
+                    student.won / student.final) * 5
+        s = sports.objects.get(sport_name=sub_domain, student=student.student, student__grade=grade)
+        s.sport_score = round(sport_score, 2)
+        s.save()
+        for schoolcode in schoolcodes:
+            mean_values[schoolcode['schoolcode']] = \
+            student_data.filter(student__schoolcode=schoolcode['schoolcode']).aggregate(Avg(('sport_score')))[
+                'sport_score__avg']
+
+    elif domain is 'extra_curricular':
+        student_data = extra_curricular.objects.filter(activity_name__iexact=sub_domain).filter(student__grade=grade)
+        collective_mean = student_data.aggregate(Avg((sub_domain)))[sub_domain + '__avg']
+        for student in student_data:
+            e = extra_curricular.objects.get(student__grade=grade, activity_name__iexact=sub_domain,
+                                             student=student.student)
+            activity_score = (student.intra_won / student.intra_played) * 4 + (
+                    student.inter_won / student.inter_played) * 6
+            e.activity_score = round(activity_score, 2)
+            e.save()
+        for schoolcode in schoolcodes:
+            mean_values[schoolcode['schoolcode']] = \
+                student_data.filter(student__schoolcode=schoolcode['schoolcode']).aggregate(Avg(('activity_score')))[
+                    'activity_score__avg']
+
+    final_values = [{x: mean_values[x] - collective_mean} for x in mean_values]
+    bottomer_schools = [final_values[x] for x in final_values.keys() if final_values[x] < 0]
+    return bottomer_schools
