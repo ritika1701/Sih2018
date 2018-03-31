@@ -4,10 +4,18 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
+# class University(models.Model):
+# university_code = models.CharField(max_length=100,primary_key=True)
+# university_name = models.CharField(max_length=1000)
+
+# def __str__(self):
+# return self.university_code
 
 class School(models.Model):
     schoolcode = models.CharField(max_length=100)
     schoolname = models.CharField(max_length=100)
+
+    # university_code= models.ForeignKey(University,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.schoolcode
@@ -45,16 +53,20 @@ class Details(models.Model):
 
 # academic data and score
 class Academics(models.Model):
-    eng = models.IntegerField(default=0)
-    maths = models.IntegerField(default=0)
-    science = models.IntegerField(default=0)
-    evs = models.IntegerField(default=0)
-    sst = models.IntegerField(default=0)
-    academic_score = models.IntegerField(default=0)
+    eng = models.FloatField(default=0)
+    maths = models.FloatField(default=0)
+    science = models.FloatField(default=0)
+    evs = models.FloatField(default=0)
+    sst = models.FloatField(default=0)
+    academic_score = models.FloatField(default=0)
     student = models.ForeignKey(Details, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.academic_score
+        return str(self.academic_score)
+
+    def save(self, *args, **kwargs):
+        self.academic_score = (self.eng + self.maths + self.science + self.evs + self.sst) / 5
+        super(Academics, self).save(*args, **kwargs)
 
 
 # sports data and score
@@ -64,7 +76,7 @@ class sports(models.Model):
     semi = models.IntegerField(default=0)
     final = models.IntegerField(default=0)
     won = models.IntegerField(default=0)
-    sport_score = models.IntegerField(default=0)
+    sport_score = models.FloatField(default=0)
     student = models.ForeignKey(Details, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -79,8 +91,7 @@ class extra_curricular(models.Model):
     intra_played = models.IntegerField(default=0)
     intra_won = models.IntegerField(default=0)
     student = models.ForeignKey(Details, on_delete=models.CASCADE)
-
-    activity_score = models.IntegerField(default=0)
+    activity_score = models.FloatField(default=0)
 
     def __str__(self):
         return self.activity_name

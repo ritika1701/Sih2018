@@ -2,6 +2,8 @@ from django.contrib.auth import update_session_auth_hash
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import SignUp
+from django.contrib.auth.hashers import make_password
+
 
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -20,7 +22,7 @@ class AccountSerializer(serializers.ModelSerializer):
                                   contact=validated_data['contact'],
                                   schoolcode=validated_data['schoolcode'],
                                   user=User.objects.create(username=validated_data['username'],
-                                                           password=validated_data['password']),
+                                                           password=make_password(validated_data['password'])),
                                   location=validated_data['location'])
 
         a.save()

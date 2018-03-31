@@ -1,4 +1,5 @@
 import xlrd, datetime, os
+import json
 from .models import Details, School, Academics, sports, extra_curricular
 
 
@@ -6,7 +7,7 @@ def parse_excel(filename='sih_excel', schoolcode='AKG_067'):
 
     wb = xlrd.open_workbook(os.getcwd()+'/dashboard/excels/' + filename + '.xlsx')
     sheet = wb.sheet_by_index(0)
-
+    student_list = []
     student_data = dict()
     for row in range(1, sheet.nrows):
         for col in range(0, sheet.ncols):
@@ -35,7 +36,10 @@ def parse_excel(filename='sih_excel', schoolcode='AKG_067'):
                 cell_value_key = '_'.join(str.lower(cell_value_key).split(' '))
                 student_data[cell_value_key] = cell_value
 
+
+        print(student_data)
         school = School.objects.get(schoolcode=schoolcode)
-        print(student_data,school)
         student = Details(rollno=student_data['rollno'],student_name=student_data['student_name'],school=school,grade=student_data['grade'],acad_year=student_data['acad_year'],gender=student_data['gender'],dob = student_data['dob'],teacher_remark=student_data['teacher_remark'],preferred=student_data['preferred'])
         # student.save()
+        student_list.append(student_data)
+        return json.dumps(student_list)
