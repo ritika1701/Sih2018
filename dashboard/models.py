@@ -55,7 +55,7 @@ class Academics(models.Model):
     eng = models.FloatField(default=0)
     maths = models.FloatField(default=0)
     science = models.FloatField(default=0)
-    evs = models.FloaField(default=0)
+    evs = models.FloatField(default=0)
     sst = models.FloatField(default=0)
     academic_score = models.FloatField(default=0)
     student = models.ForeignKey(Details, on_delete=models.CASCADE)
