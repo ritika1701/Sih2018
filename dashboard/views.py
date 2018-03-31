@@ -59,13 +59,11 @@ class OtpRegister(APIView):
 
     def post(self,request,format=None):
         length=5
-        data=request.database
-        print(data)
+        data=request.data
 
-        a=json.dumps(request.body)
-        mobile_number=a['contact']
+        mobile_number=data['contact']
         client = nexmo.Client(key='66505af0', secret='cltyPLV3jQJQYYwX')
         b=random.sample(range(10**(length-1), 10**length), 1)[0]
         client.send_message({'from': '919473805008', 'to': mobile_number, 'text': b})
 
-        return Response(b, status=status.HTTP_201_CREATED)
+        return Response({'text':b}, status=status.HTTP_201_CREATED)
