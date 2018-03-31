@@ -26,9 +26,9 @@ SECRET_KEY = 'zs-d!vlu%vj^ytb8(8f+_v!hghw(m7%_@amn0!294mp67@42o='
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
-# Application definition
+NEXMO_API_KEY = '66505af0'
+NEXMO_API_SECRET = 'cltyPLV3jQJQYYwX'
+NEXMO_DEFAULT_FROM = '919473805008'# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',

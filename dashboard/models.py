@@ -60,13 +60,14 @@ class Academics(models.Model):
     sst = models.FloatField(default=0)
     academic_score = models.FloatField(default=0)
     student = models.ForeignKey(Details, on_delete=models.CASCADE)
-
     def __str__(self):
         return str(self.academic_score)
+
 
     def save(self, *args, **kwargs):
         self.academic_score = (self.eng + self.maths + self.science + self.evs + self.sst) / 5
         super(Academics, self).save(*args, **kwargs)
+
 
 
 # sports data and score
@@ -91,6 +92,7 @@ class extra_curricular(models.Model):
     intra_played = models.IntegerField(default=0)
     intra_won = models.IntegerField(default=0)
     student = models.ForeignKey(Details, on_delete=models.CASCADE)
+
     activity_score = models.FloatField(default=0)
 
     def __str__(self):
